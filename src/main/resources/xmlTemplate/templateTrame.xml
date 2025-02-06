@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<trame>
+	<enableInversion value="false"/>
+    <type size="2">
+    	<trameSize id="00" size="1"/>
+    	<trameSize id="01" size="1"/>
+    </type>
+    
+    <cores>
+	    <core id="00" size="14">
+	        <temperature position="3" size="6">x*2</temperature >
+	        <outsideTemperature position="9" size="8"/>
+	    </core>
+	    
+	    <core id="01" size="6">
+	        <weight position="3" size="6"/>
+	    </core>
+    </cores>
+</trame>

@@ -3,20 +3,15 @@ package fr.mesrouxvais.beepanel.repositories;
 import java.time.LocalDateTime;
 
 public record BasicStatement(
-        Float interiorTemperature,
-        Float outsideTemperature,
-        Float humidity,
-        Integer weight,
+        String valueName,
+        Float value,
+        String device,
         LocalDateTime date
 ) {
 
     public BasicStatement {
-        if (interiorTemperature == null || outsideTemperature == null || humidity == null || weight == null || date == null) {
+        if (valueName == null || value == null || device == null || date == null) {
             throw new IllegalArgumentException("Aucun champ ne peut être nul");
-        }
-        
-        if (weight < 0) {
-            throw new IllegalArgumentException("Le poids ne peut pas être négatif");
         }
     }
 }

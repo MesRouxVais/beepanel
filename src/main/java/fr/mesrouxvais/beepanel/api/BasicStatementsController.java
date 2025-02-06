@@ -18,8 +18,14 @@ import fr.mesrouxvais.beepanel.util.DateTool;
 @RequestMapping("/api/basicStatements")
 public class BasicStatementsController {
 	
+	@Value("${beepanel.api.token}")
+    private String adminToken;
+	
 	@Autowired
 	private BasicStatementsRepository repository;
+	
+	@Autowired
+	private SigFoxMessageReader sigFoxMessageReader;
 	
 	@Value("${beepanel.api.token}")
     private String apiToken;
@@ -29,23 +35,36 @@ public class BasicStatementsController {
         return repository.getAllStatements();
     }
 	
-	@GetMapping("/24h")
-    List<BasicStatement> getLast24h() {
-        return repository.getLast78Statements();
+	@GetMapping("/byTypeAndNumber/{type}/{number}")
+    List<BasicStatement> getLastN(@PathVariable String type, @PathVariable int number) {
+		if(String.valueOf(type).equals("all")) {
+			return repository.getLastNStatements(number);
+		}
+		
+        return repository.getLastNStatementsWhitType(type, number);
     }
 	
-	@GetMapping("/request/{year}/{month}")
+	@GetMapping("/byDate/{year}/{month}")
     List<BasicStatement> getForTheMonth(@PathVariable int year, @PathVariable int month) {	
         return repository.getStatementsByMonth(DateTool.makeDate(year,month));
+        
     }
-	@GetMapping("/request/{year}")
+	@GetMapping("/byDate/{year}")
     List<BasicStatement> getForTheYear(@PathVariable int year) {
         return repository.getStatementsByYear(DateTool.makeDate(year));
     }
 	
 	@PostMapping()
 	void create(@RequestBody SigFoxMessage message) {
-		System.out.println(message);
+		System.out.println("sigfox new message :" +message);
+		
+		if(!message.token().equals(adminToken)) {
+			System.out.println("sigfox token invalid");
+			return;
+		}
+		
+		sigFoxMessageReader.messageToTagsConversion(message.data(), message.device());
+		
 	}
 	
 	

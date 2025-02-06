@@ -34,8 +34,16 @@ public class DateTool {
      * @throws DateFormatException if the date format is invalid
      */
     static public LocalDateTime makeDate(int year, int month) throws DateFormatException {
-        String dateString = year + "-" + month + "-15 10:30:00";
-        return makeDate(dateString);
+        String monthFormatted = String.format("%02d", month); // Cela formate le mois en deux chiffres
+        
+        // Construire la chaîne de date avec le bon format
+        String dateString = year + "-" + monthFormatted + "-15 10:30:00"; // Le 15 est arbitraire pour illustrer
+        
+        // Définir le format attendu
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        // Parser la chaîne dans un objet LocalDateTime
+        return LocalDateTime.parse(dateString, formatter);
     }
 
     /**
