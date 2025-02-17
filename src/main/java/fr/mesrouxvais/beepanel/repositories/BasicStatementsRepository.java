@@ -4,7 +4,10 @@ package fr.mesrouxvais.beepanel.repositories;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Repository
@@ -15,19 +18,38 @@ public class BasicStatementsRepository {
 
     public BasicStatementsRepository(JdbcClient jdbClient) {
         this.jdbClient = jdbClient;
+        
     }
 
     
     public void addBasicStatement(BasicStatement basicStatement) {
+    	/*
     	 var updated = jdbClient.sql("INSERT INTO "+ DATABASE_NAME +"(valueName, value, device, date) values(?,?,?,?)")
                  .params(List.of(basicStatement.valueName(),basicStatement.value(),basicStatement.device(),basicStatement.date()))
                  .update();
+        */
 
-         Assert.state(updated == 1, "Failed to create basicStatement " + basicStatement.date());
+         //Assert.state(updated == 1, "Failed to create basicStatement " + basicStatement.date());
+         
+         //compile if new day
+         
+         LocalDate lastToCompileDate = getLastToCompileDate().toLocalDate();
+         LocalDate basicStatementDate = basicStatement.date().toLocalDate();
+         
+         long daysDifference = ChronoUnit.DAYS.between(lastToCompileDate, basicStatementDate);
+         
+         if(daysDifference > 0) {
+        	 List<BasicStatement> toCompileList = getStatementsByDate(lastToCompileDate.toString(), 100);
+        	 System.out.println(toCompileList);
+         }else {
+        	 System.out.println("No need to compile");
+         }
+         
+         
     }
 
     
-    public List<BasicStatement> getAllStatements() {
+    public List<BasicStatement> getAllBasicStatements() {
     	return jdbClient.sql("SELECT valueName, value, device, date FROM " + DATABASE_NAME)
                 .query(BasicStatement.class)
                 .list();
@@ -43,7 +65,8 @@ public class BasicStatementsRepository {
               .list();      
     }
     
-    
+    /*
+    TODO faire un mélange complet avec getStatementsBetweenDates
     public List<BasicStatement> getLastNStatementsWhitType(String type, int number) {
         String sqlQuery = "SELECT valueName, value, device, date FROM " + DATABASE_NAME       
                 + " WHERE valueName = ? "  // Condition pour le type
@@ -55,28 +78,44 @@ public class BasicStatementsRepository {
               .query(BasicStatement.class)                                          
               .list();      
     }
+    */
+
     
-    //get whit Date
-    public List<BasicStatement> getStatementsByYear(LocalDateTime date) {
-        String sqlQuery = "SELECT valueName, value, device, date FROM " + DATABASE_NAME 
-                          + " WHERE strftime('%Y',date) = ?";
-        
-        return jdbClient.sql(sqlQuery)
-                        .params(List.of(String.valueOf(date.getYear())))
-                        .query(BasicStatement.class)
-                        .list();
+    
+    //New for postgre
+
+    
+    public LocalDateTime getLastToCompileDate() {
+    	String sqlQuery = "SELECT date FROM "+DATABASE_NAME+" WHERE date = (SELECT MAX(date) FROM "+DATABASE_NAME+")  LIMIT 1";
+    	
+    	return jdbClient.sql(sqlQuery).query(LocalDateTime.class).single();
     }
     
-    
-    public List<BasicStatement> getStatementsByMonth(LocalDateTime date) {
-        String sqlQuery = "SELECT valueName, value, device, date FROM " + DATABASE_NAME 
-                          + " WHERE strftime('%Y', date) = ? AND strftime('%m', date) = ?";
-        
-        String monthFormatted = String.format("%02d", date.getMonthValue());
-        
-        return jdbClient.sql(sqlQuery)
-                        .params(List.of(String.valueOf(date.getYear()), monthFormatted))
-                        .query(BasicStatement.class)
-                        .list();
+    public List<BasicStatement> getStatementsByDate(String date, int limit){
+    	String sqlQuery = "SELECT * FROM " + DATABASE_NAME +
+                " WHERE DATE(date) = CAST(? AS DATE)" +
+                " ORDER BY date ASC LIMIT ?";
+
+		return jdbClient.sql(sqlQuery)
+		      .param(date)  // Assurez-vous que fromDate est bien un Timestamp
+		      .param(limit)     // Limite en entier
+		      .query(BasicStatement.class)
+		      .list();
     }
+    	
+    
+	public List<BasicStatement> getStatementsBetweenDates(String fromDate, String toDate, int limit) {
+		String sqlQuery = "SELECT * FROM " + DATABASE_NAME +
+                " WHERE date >= CAST(? AS TIMESTAMP) AND date <= CAST(? AS TIMESTAMP) " +
+                " ORDER BY date ASC LIMIT ?";
+
+		return jdbClient.sql(sqlQuery)
+		      .param(fromDate)  // Assurez-vous que fromDate est bien un Timestamp
+		      .param(toDate)    // Assurez-vous que toDate est bien un Timestamp
+		      .param(limit)     // Limite en entier
+		      .query(BasicStatement.class)
+		      .list();
+
+		
+	}
 }

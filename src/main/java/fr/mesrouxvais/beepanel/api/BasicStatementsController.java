@@ -1,5 +1,6 @@
 package fr.mesrouxvais.beepanel.api;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,26 +35,16 @@ public class BasicStatementsController {
 	
 	@GetMapping
     List<BasicStatement> getAll() {
-        return repository.getAllStatements();
+        return repository.getAllBasicStatements();
     }
 	
-	@GetMapping("/byTypeAndNumber/{type}/{number}")
-    List<BasicStatement> getLastN(@PathVariable String type, @PathVariable int number) {
-		if(String.valueOf(type).equals("all")) {
-			return repository.getLastNStatements(number);
+	@GetMapping("/DateBetween/{fromDate}/{toDate}/{limit}")
+    List<BasicStatement> getBetweenDates(@PathVariable String fromDate, @PathVariable String toDate, @PathVariable int limit) {
+		if(DateTool.isValidDate(fromDate) || DateTool.isValidDate(toDate)) {
+			 return repository.getStatementsBetweenDates(fromDate,toDate,limit);
+		}else {
+			return null;
 		}
-		
-        return repository.getLastNStatementsWhitType(type, number);
-    }
-	
-	@GetMapping("/byDate/{year}/{month}")
-    List<BasicStatement> getForTheMonth(@PathVariable int year, @PathVariable int month) {	
-        return repository.getStatementsByMonth(DateTool.makeDate(year,month));
-        
-    }
-	@GetMapping("/byDate/{year}")
-    List<BasicStatement> getForTheYear(@PathVariable int year) {
-        return repository.getStatementsByYear(DateTool.makeDate(year));
     }
 	
 	@PostMapping()

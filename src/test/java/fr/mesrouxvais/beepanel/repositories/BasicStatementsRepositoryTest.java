@@ -41,7 +41,7 @@ public class BasicStatementsRepositoryTest {
         repository.addBasicStatement(statement);
         
 
-        List<BasicStatement> statements = repository.getAllStatements();
+        List<BasicStatement> statements = repository.getAllBasicStatements();
         assertThat(statements).hasSize(1);
         assertThat(statements.get(0).value()).isEqualTo(15.0f);
         assertThat(statements.get(0).valueName()).isEqualTo("test1");

@@ -1,7 +1,9 @@
 package fr.mesrouxvais.beepanel.util;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class DateTool {
     
@@ -56,5 +58,15 @@ public class DateTool {
     static public LocalDateTime makeDate(int year) throws DateFormatException {
         String dateString = year + "-12-15 10:30:00";
         return makeDate(dateString);
+    }
+    
+    public static boolean isValidDate(String dateStr) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        try {
+            LocalDate.parse(dateStr, formatter);
+            return true; // La date est valide
+        } catch (DateTimeParseException e) {
+            return false; // La date est invalide
+        }
     }
 }
