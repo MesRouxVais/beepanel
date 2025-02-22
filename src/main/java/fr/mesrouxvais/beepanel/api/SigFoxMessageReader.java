@@ -1,6 +1,8 @@
 package fr.mesrouxvais.beepanel.api;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -18,6 +20,7 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import fr.mesrouxvais.beepanel.repositories.BasicStatement;
 import fr.mesrouxvais.beepanel.repositories.BasicStatementsRepository;
+import fr.mesrouxvais.beepanel.repositories.XMLRepository;
 import fr.mesrouxvais.beepanel.util.BinaryTool;
 
 @Component
@@ -25,18 +28,26 @@ public class SigFoxMessageReader {
 	@Value("${beepanel.admin.xml}")
 	private String xmlPath;
 	
+	@Autowired
+	private BasicStatementsRepository repository;
+	@Autowired
+	private XMLRepository XMLrepository;
+	
+	public String xmlstring = null;
+	
 	public void messageToTagsConversion(String trame, String device) {
+		repository.seeForCompilation(LocalDateTime.now());
+		
 		byte[] valeurTrame = BinaryTool.stringHexaToArray(trame);
 		
-		//URL fichierexml = SigFoxMessageReader.class.getClassLoader().getResource("xmlTemplate/templateTrame.xml");
 
 
 		try {
 	        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder builder = factory.newDocumentBuilder();
-	        File file;
-	        file = new File(xmlPath);
-	        Document document = builder.parse(file);
+	        
+	        ByteArrayInputStream inputStream = new ByteArrayInputStream(XMLrepository.getXml().getBytes(StandardCharsets.UTF_8));
+	        Document document = builder.parse(inputStream);
 	        // Normaliser le document
 	        document.getDocumentElement().normalize();
 	        
@@ -93,6 +104,7 @@ public class SigFoxMessageReader {
 	        
 	        NodeList children = trameCore.getChildNodes();
 	        for (int i = 0; i < children.getLength(); i++) {
+	        	
 	            Node child = children.item(i);
 	            if (child.getNodeType() == Node.ELEMENT_NODE) { // Vérifie si c'est un élément (pas un texte ou un commentaire)
 	                Element childElement = (Element) child;
@@ -134,12 +146,9 @@ public class SigFoxMessageReader {
 	}
 	
 	
-	@Autowired
-	private BasicStatementsRepository repository;
-	
 	private void baliseMaker(float value, String name, String device) {
 		BasicStatement statement = new BasicStatement(name, value, device, LocalDateTime.now());
 		
-		repository.addBasicStatement(statement);
+		repository.addBasicStatement(statement, BasicStatementsRepository.BASIC_DATABASE_NAME);
 	}
 }

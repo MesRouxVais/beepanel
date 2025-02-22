@@ -1,6 +1,5 @@
 package fr.mesrouxvais.beepanel.api;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import fr.mesrouxvais.beepanel.repositories.BasicStatement;
 import fr.mesrouxvais.beepanel.repositories.BasicStatementsRepository;
 import fr.mesrouxvais.beepanel.util.DateTool;
-
+//TODO rendre le tout utilisable par l'user
 @RestController
 @RequestMapping("/api/basicStatements")
 @CrossOrigin
@@ -38,13 +37,16 @@ public class BasicStatementsController {
         return repository.getAllBasicStatements();
     }
 	
-	@GetMapping("/DateBetween/{fromDate}/{toDate}/{limit}")
-    List<BasicStatement> getBetweenDates(@PathVariable String fromDate, @PathVariable String toDate, @PathVariable int limit) {
+	@GetMapping("/DateBetween/{fromDate}/{toDate}/{limit}/{dataBaseCode}")
+    List<BasicStatement> getBetweenDates(@PathVariable String fromDate, @PathVariable String toDate, @PathVariable int limit, @PathVariable int dataBaseCode) {
 		if(DateTool.isValidDate(fromDate) || DateTool.isValidDate(toDate)) {
-			 return repository.getStatementsBetweenDates(fromDate,toDate,limit);
-		}else {
-			return null;
+			if(dataBaseCode == 1) {
+				return repository.getStatementsBetweenDates(fromDate,toDate,limit, BasicStatementsRepository.COMPILED_DATABASE_NAME);
+			}else if(dataBaseCode == 0) {
+				return repository.getStatementsBetweenDates(fromDate,toDate,limit, BasicStatementsRepository.BASIC_DATABASE_NAME);
+			}	 
 		}
+		return null;
     }
 	
 	@PostMapping()
