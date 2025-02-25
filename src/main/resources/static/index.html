@@ -5,268 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Ruche CDG</title>
-    <style>
-        /* Le même style que celui que vous avez partagé. J'ai ajouté des styles pour la nouvelle liste de mots. */
-        .fixed-message {
-            position: fixed;
-            top: 0px;
-            left: 0px;
-            background-color: rgba(255, 255, 255, 0.425);
-            padding: 4px;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            font-size: 0.9rem;
-            z-index: 1000;
-        }
-
-        .fixed-message a {
-            color: var(--secondary-color);
-            text-decoration: none;
-            margin-left: 5px;
-        }
-
-        .fixed-message a:hover {
-            text-decoration: underline;
-        }
-
-        :root {
-            --primary-color: #FDB813;
-            --secondary-color: #704214;
-            --border-color: #FFE4B5;
-            --background-color: #FFF8DC;
-            --text-color: #4A3810;
-            --input-border: #D2691E;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            min-height: 100vh;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            padding: 1rem;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        .container {
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .graph {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(253, 184, 19, 0.2);
-            min-height: 400px;
-            position: relative;
-            transition: transform 0.3s ease;
-            overflow: hidden;
-        }
-
-        .form-container {
-            background-color: white;
-            padding: 1.5rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(253, 184, 19, 0.2);
-            height: fit-content;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .form-container::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: repeating-linear-gradient(45deg,
-                    var(--primary-color),
-                    var(--primary-color) 10px,
-                    var(--secondary-color) 10px,
-                    var(--secondary-color) 20px);
-        }
-
-        h2,
-        h3 {
-            margin-bottom: 1rem;
-            color: var(--secondary-color);
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        label {
-            font-weight: 500;
-            color: var(--text-color);
-        }
-
-        input,
-        select {
-            padding: 0.75rem;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background-color: rgba(255, 248, 220, 0.5);
-        }
-
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(253, 184, 19, 0.2);
-        }
-
-        button {
-            padding: 0.75rem 1rem;
-            background-color: var(--primary-color);
-            color: var(--text-color);
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        button:hover {
-            background-color: var(--secondary-color);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .tag {
-            background-color: #F1E0A1;
-            color: #704214;
-            border-radius: 20px;
-            display: inline-flex;
-            padding-left: 1rem;
-            justify-content: space-between;
-            align-items: center;
-            text-align: center;
-            margin: 0.2rem;
-            font-size: 0.8rem;
-        }
-
-        .tag button {
-            background: none;
-            border: none;
-            color: red;
-            cursor: pointer;
-            font-size: 0.8rem;
-            margin-left: -10px;
-        }
-
-        .tags-list {
-            margin-top: 1rem;
-        }
-
-        .period-select {
-            margin-top: 1rem;
-        }
-
-
-        /* Responsive - Pour les petits écrans */
-        @media screen and (max-width: 768px) {
-
-            .fixed-message {
-                position: fixed;
-                bottom: 0px;
-                right: 0px;
-                top: auto;
-                left: auto;
-                background-color: rgba(255, 255, 255, 0.425);
-                padding: 4px;
-                border-radius: 4px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                font-size: 0.9rem;
-                z-index: 1000;
-            }
-
-
-
-            body {
-                padding: 0px;
-            }
-
-            .container {
-                grid-template-columns: 1fr;
-                /* Sur petits écrans, les éléments seront en une seule colonne */
-                gap: 0px;
-            }
-
-            .graph {
-                padding: 1rem;
-                border-radius: 0px;
-                min-height: 0px;
-            }
-
-            .form-container {
-                padding: 1rem;
-                border-radius: 0px;
-            }
-
-            .form-group {
-                flex-direction: column;
-                /* Les champs de saisie s'empilent les uns sous les autres */
-                gap: 0.8rem;
-            }
-
-            input,
-            select,
-            button {
-                font-size: 0.9rem;
-                /* Réduit la taille de la police pour plus d'espace */
-                padding: 0.6rem;
-                /* Réduit le padding des champs */
-            }
-
-            .tags-list {
-                margin-top: 0.8rem;
-            }
-
-            .tag {
-                font-size: 0.75rem;
-                /* Réduit la taille des balises */
-                padding: 0.4rem;
-            }
-
-            .period-select {
-                margin-top: 1rem;
-            }
-
-            .fixed-message {
-                font-size: 0.8rem;
-                /* Plus petit texte pour la notification fixe */
-                padding: 3px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -281,8 +20,8 @@
         </div>
 
         <div class="form-container">
+            <!--
             <h2>📊 Choisissez vos données</h2>
-
             <div class="form-group">
                 <label for="tagInput">Ajouter un mot-clé (poids, température, etc.)</label>
                 <input type="text" id="tagInput" placeholder="Entrez un mot-clé">
@@ -295,14 +34,38 @@
                 <span class="tag"><span>temperature</span><button
                         style="margin-left: 8px; margin-right: 8px; padding: 2px 6px;">×</button></span>
             </div>
+            -->
 
             <h3>📅 Afficher les données par</h3>
             <div class="period-select">
-                <select id="periodSelector">
+                <select id="periodTypeSelector">
+                    <option value="day">Jour</option>
                     <option value="week">Semaine</option>
                     <option value="month">Mois</option>
                     <option value="year">Année</option>
                 </select>
+
+                <div id="daySelector" class="period-selector">
+                    <label for="specificDay">Choisir le jour:</label>
+                    <input type="date" id="specificDay" name="specificDay">
+                </div>
+
+                <div id="weekSelector" class="period-selector" style="display:none;">
+                    <label for="specificWeek">Choisir la semaine:</label>
+                    <input type="week" id="specificWeek" name="specificWeek">
+                </div>
+
+                <div id="monthSelector" class="period-selector" style="display:none;">
+                    <label for="specificMonth">Choisir le mois:</label>
+                    <input type="month" id="specificMonth" name="specificMonth">
+                </div>
+
+                <div id="yearSelector" class="period-selector" style="display:none;">
+                    <label for="specificYear">Choisir l'année:</label>
+                    <select id="specificYear" name="specificYear">
+                        <!-- Les années seront ajoutées dynamiquement -->
+                    </select>
+                </div>
             </div>
 
             <button id="refreshBtn" style="margin-top: 0.5rem;">Actualiser</button>
@@ -310,275 +73,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-
-
-        // Sélectionner les éléments du DOM
-        const tagInput = document.getElementById('tagInput');
-        const addTagBtn = document.getElementById('addTagBtn');
-        const tagsList = document.getElementById('tagsList');
-
-        // Liste pour stocker les tags
-        let tags = [];
-
-        // Fonction pour obtenir tous les tags (Méthode 1 : depuis le tableau)
-        function getAllTags() {
-            return tags;
-        }
-
-        // Fonction pour obtenir tous les tags (Méthode 2 : depuis le DOM)
-        function getAllTagsFromDOM() {
-            return Array.from(tagsList.querySelectorAll('.tag'))
-                .map(tag => tag.firstChild.textContent);
-        }
-
-        // Fonction pour créer un nouveau tag
-        function createTag(tagText) {
-            const tag = document.createElement('span');
-            tag.classList.add('tag');
-
-            // Texte du tag
-            const text = document.createElement('span');
-            text.textContent = tagText;
-            tag.appendChild(text);
-
-            // Bouton de suppression
-            const closeBtn = document.createElement('button');
-            closeBtn.innerHTML = '&times;';
-            closeBtn.style.marginLeft = '8px';
-            closeBtn.style.marginRight = '8px';
-            closeBtn.style.padding = '2px 6px';
-
-            // Gestionnaire d'événement pour la suppression
-            closeBtn.addEventListener('click', () => {
-                tag.remove();
-                tags = tags.filter(t => t !== tagText);
-            });
-
-            tag.appendChild(closeBtn);
-            return tag;
-        }
-
-        // Fonction pour ajouter un nouveau tag
-        function addTag(tagText) {
-            if (tagText.trim() !== '' && !tags.includes(tagText)) {
-                tags.push(tagText);
-                const tag = createTag(tagText);
-                tagsList.appendChild(tag);
-            }
-            tagInput.value = '';
-        }
-
-        // Gestionnaire d'événement pour le bouton d'ajout
-        addTagBtn.addEventListener('click', () => {
-            addTag(tagInput.value);
-        });
-
-        // Gestionnaire d'événement pour la touche Entrée
-        tagInput.addEventListener('keyup', (e) => {
-            if (e.key === 'Enter') {
-                addTag(tagInput.value);
-            }
-        });
-
-
-
-
-        //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-        //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-        //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-        //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-        //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-        //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-        //                                                                       Fin partie docuement, début logique de donnée
-        //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-        //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-        //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-        //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-        //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-        //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-        document.addEventListener('DOMContentLoaded', function () {
-            // Tableau pour les données triées
-            let chartData = {
-                labels: [], // Dates
-                datasets: [] // Tableaux dynamiques pour les courbes
-
-
-            };
-            // Liste existante
-            let jsonData;
-            let listeData = [
-
-            ];
-
-
-
-
-            function getData() {
-                fetch('api/basicStatements/byTypeAndNumber/all/100') // Remplace par l'URL de ton API
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Erreur de réseau');
-                        }
-                        return response.json(); // On transforme la réponse en JSON
-                    })
-                    .then(data => {
-                        console.log(data); // Ici, tu peux manipuler les données reçues
-                        jsonData = data;
-                        processJsonData(jsonData);
-                        listeData.forEach(item => {
-                            sortByDate(item.label.nom);
-
-                        });
-                        console.log(listeData);
-                        createGraph();
-                        myChart.update();
-                    })
-                    .catch(error => {
-                        console.error('Il y a eu un problème avec la requête Fetch :', error);
-                    });
-            }
-
-            function processJsonData(jsonData) {
-                jsonData.forEach(data => {
-                    const newDate = new Date(data.date).toISOString().split('T')[0];
-                    addToLabel(data.valueName, newDate, data.value);
-
-                });
-            }
-
-            // Fonction pour ajouter un nouveau label (nom)
-            function pushLabel(name) {
-                let newLabel = {
-                    label: {
-                        nom: name,
-                        data: [] // On commence avec un tableau vide
-                    }
-                };
-                listeData.push(newLabel);
-            }
-
-            // Fonction pour ajouter une entrée de date et valeur à un label existant
-            function addToLabel(labelName, date, value) {
-                let label = listeData.find(item => item.label.nom === labelName);
-                if (label) {
-                    label.label.data.push([date, value]);
-                } else {
-                    console.log(`Le label '${labelName}' n'existait pas.`);
-                    pushLabel(labelName);
-                    addToLabel(labelName, date, value);
-
-                }
-            }
-
-            // Fonction pour trier les données d'un label par date
-            function sortByDate(labelName) {
-                // Chercher le label dans la liste par son nom
-                let label = listeData.find(item => item.label.nom === labelName);
-
-                // Si le label existe, trier le tableau data par la date
-                if (label) {
-                    label.label.data.sort((a, b) => {
-                        let dateA = new Date(a[0]);
-                        let dateB = new Date(b[0]);
-                        return dateA - dateB; // Trie croissant (date la plus ancienne en premier)
-                    });
-                } else {
-                    console.log(`Le label '${labelName}' n'existe pas.`);
-                }
-            }
-            function getRandomColor() {
-                const letters = '0123456789ABCDEF';
-                let color = '#';
-                for (let i = 0; i < 6; i++) {
-                    color += letters[Math.floor(Math.random() * 16)];
-                }
-                return color;
-            }
-
-            function createGraph() {
-                listeData.forEach(item => {
-                    chartData.datasets.push({
-                        label: item.label.nom,
-                        data: Array(chartData.labels.length).fill(null),
-                        borderColor: getRandomColor(),
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        fill: false
-                    });
-
-                });
-
-                const allDates = listeData.flatMap(entry => entry.label.data.map(d => d[0]));
-
-                // Trouver la date min et max
-                const minDate = new Date(Math.min(...allDates.map(date => new Date(date))));
-                const maxDate = new Date(Math.max(...allDates.map(date => new Date(date))));
-
-                const labels = listeData.map(entry => entry.label.nom);
-
-                // Générer toutes les dates entre minDate et maxDate
-                const getDateRange = (start, end) => {
-                    const dates = [];
-                    let currentDate = new Date(start);
-
-                    while (currentDate <= end) {
-                        dates.push(currentDate.toISOString().split('T')[0]);
-                        currentDate.setDate(currentDate.getDate() + 1);
-                    }
-
-                    return dates;
-                };
-
-
-                const dateRange = getDateRange(minDate, maxDate);
-
-                // Stocker les valeurs sous forme d'objet { date: { label: value } }
-                const dataMap = {};
-
-                // Remplir dataMap avec les données existantes
-                listeData.forEach(entry => {
-                    const labelName = entry.label.nom;
-                    entry.label.data.forEach(([date, value]) => {
-                        if (!dataMap[date]) dataMap[date] = {};
-                        dataMap[date][labelName] = value;
-                    });
-                });
-
-                // Afficher les données jour par jour
-                dateRange.forEach(date => {
-                    console.log(`Date: ${date}`);
-                    if (!chartData.labels.includes(date)) {
-                        chartData.labels.push(date);
-                        chartData.datasets.forEach(dataset => dataset.data.push(null));  // Ajouter un "null" pour chaque courbe
-                    }
-                    labels.forEach(label => {
-                        const value = dataMap[date]?.[label] ?? null;
-                        console.log(`  - ${label}: ${value}`);
-                        const datasetIndex = chartData.datasets.findIndex(dataset => dataset.label === label);
-                        chartData.datasets[datasetIndex].data[chartData.labels.indexOf(date)] = value;
-                    });
-                });
-                console.log(chartData);
-
-            }
-            // Exemple d'utilisation des fonctions
-
-            // Trier les données du label "Structure 3" par date
-
-            // Affichage de la liste mise à jour
-            getData();
-            const ctx = document.getElementById('myChart').getContext('2d');
-            const myChart = new Chart(ctx, {
-                type: 'line',
-                data: chartData,
-                options: {
-                    spanGaps: true  // Permet d'ignorer les valeurs nulles et de relier les points
-                }
-            });
-
-        });
-
-    </script>
+    <script src="script.js"></script>
 </body>
 
 </html>

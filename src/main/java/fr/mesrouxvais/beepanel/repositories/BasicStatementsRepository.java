@@ -5,8 +5,6 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
-import fr.mesrouxvais.beepanel.util.DateTool;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -77,15 +75,13 @@ public class BasicStatementsRepository {
     }
     
     public void addBasicStatement(BasicStatement basicStatement, String dbName) {
-    	 if(dbName == COMPILED_DATABASE_NAME) {
-    		 var updated = jdbClient.sql("INSERT INTO "+ dbName +"(valueName, value, device, date) values(?,?,?,?)")
-                     .params(List.of(basicStatement.valueName(),basicStatement.value(),basicStatement.device(),basicStatement.date()))
-                     .update();
-            
+		 var updated = jdbClient.sql("INSERT INTO "+ dbName +"(valueName, value, device, date) values(?,?,?,?)")
+                 .params(List.of(basicStatement.valueName(),basicStatement.value(),basicStatement.device(),basicStatement.date()))
+                 .update();
+        
 
-             Assert.state(updated == 1, "Failed to create basicStatement " + basicStatement.date());
-    	 }
-         
+         Assert.state(updated == 1, "Failed to create basicStatement " + basicStatement.date());
+     
     }
 
     
@@ -128,8 +124,9 @@ public class BasicStatementsRepository {
     
 	public List<BasicStatement> getStatementsBetweenDates(String fromDate, String toDate, int limit, String dbName) {
 		String sqlQuery = "SELECT * FROM " + dbName +
-                " WHERE date >= CAST(? AS TIMESTAMP) AND date <= CAST(? AS TIMESTAMP) " +
+                " WHERE date::date >= CAST(? AS DATE) AND date::date <= CAST(? AS DATE) " +
                 " ORDER BY date ASC LIMIT ?";
+
 
 		return jdbClient.sql(sqlQuery)
 		      .param(fromDate)  // Assurez-vous que fromDate est bien un Timestamp

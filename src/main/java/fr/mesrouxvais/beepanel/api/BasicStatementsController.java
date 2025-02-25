@@ -39,14 +39,17 @@ public class BasicStatementsController {
 	
 	@GetMapping("/DateBetween/{fromDate}/{toDate}/{limit}/{dataBaseCode}")
     List<BasicStatement> getBetweenDates(@PathVariable String fromDate, @PathVariable String toDate, @PathVariable int limit, @PathVariable int dataBaseCode) {
-		if(DateTool.isValidDate(fromDate) || DateTool.isValidDate(toDate)) {
-			if(dataBaseCode == 1) {
-				return repository.getStatementsBetweenDates(fromDate,toDate,limit, BasicStatementsRepository.COMPILED_DATABASE_NAME);
-			}else if(dataBaseCode == 0) {
-				return repository.getStatementsBetweenDates(fromDate,toDate,limit, BasicStatementsRepository.BASIC_DATABASE_NAME);
-			}	 
-		}
-		return null;
+		
+		fromDate = DateTool.validateAndCorrectDate(fromDate);
+	    toDate = DateTool.validateAndCorrectDate(toDate);
+	    
+	    if (dataBaseCode == 1) {
+	        return repository.getStatementsBetweenDates(fromDate, toDate, limit, BasicStatementsRepository.COMPILED_DATABASE_NAME);
+	    } else if (dataBaseCode == 0) {
+	        return repository.getStatementsBetweenDates(fromDate, toDate, limit, BasicStatementsRepository.BASIC_DATABASE_NAME);
+	    }
+	    
+	    return null;
     }
 	
 	@PostMapping()

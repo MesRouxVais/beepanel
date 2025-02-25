@@ -1,9 +1,13 @@
 package fr.mesrouxvais.beepanel.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Calendar;
+import java.util.Date;
 
 public class DateTool {
     
@@ -60,13 +64,35 @@ public class DateTool {
         return makeDate(dateString);
     }
     
-    public static boolean isValidDate(String dateStr) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    static public String validateAndCorrectDate(String dateString) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);  // Désactiver le traitement laxiste des dates
+        
         try {
-            LocalDate.parse(dateStr, formatter);
-            return true; // La date est valide
-        } catch (DateTimeParseException e) {
-            return false; // La date est invalide
+            Date date = dateFormat.parse(dateString);
+            return dateFormat.format(date);
+        } catch (ParseException e) {
+            // Si la date est invalide, essayer de "corriger" en utilisant la date la plus proche valide
+            return getClosestValidDate(dateString);
         }
+    }
+
+    static private String getClosestValidDate(String invalidDate) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String[] dateParts = invalidDate.split("-");
+
+        int year = Integer.parseInt(dateParts[0]);
+        int month = Integer.parseInt(dateParts[1]) - 1;  // Mois 0-based
+        int day = Integer.parseInt(dateParts[2]);
+        
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day);
+        
+        // Si la date est invalide (par exemple le 30 février), on ajuste à la date la plus proche valide
+        if (calendar.getActualMaximum(Calendar.DAY_OF_MONTH) < day) {
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        }
+        
+        return dateFormat.format(calendar.getTime());
     }
 }
